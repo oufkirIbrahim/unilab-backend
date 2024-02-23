@@ -1,0 +1,61 @@
+package com.m2i.unilabmanagerbackend.controller;
+
+import com.m2i.unilabmanagerbackend.DTO.ConsumableAssignmentDTO;
+import com.m2i.unilabmanagerbackend.entity.Consumable;
+import com.m2i.unilabmanagerbackend.entity.ConsumableAssignment;
+import com.m2i.unilabmanagerbackend.service.ConsumableService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+
+public class ConsumableController {
+
+    @Autowired
+    private ConsumableService consumableService;
+
+    @GetMapping("/admin/consumables")
+    public ResponseEntity<List<Consumable>> getAllConsumables() {
+        return consumableService.getAllConsumables();
+    }
+
+    @PostMapping("/admin/consumables")
+    public ResponseEntity<Consumable> saveConsumable(@RequestBody Consumable newConsumable) {
+        return consumableService.saveConsumable(newConsumable);
+    }
+
+    @PutMapping("/admin/consumables/id/{id}")
+    public ResponseEntity<?> updateConsumable(@PathVariable Integer id, @RequestBody Consumable updatedConsumable) {
+        return consumableService.updateConsumable(id, updatedConsumable);
+    }
+
+
+
+    @DeleteMapping("/admin/consumables/id/{id}")
+    public ResponseEntity<String> deleteConsumableById(@PathVariable Integer id) {
+        return consumableService.deleteConsumableById(id);
+    }
+
+    @GetMapping("/admin/consumables/id/{id}")
+    public ResponseEntity<?> getConsumableById(@PathVariable Integer id) {
+        return consumableService.getConsumableById(id);
+    }
+
+    @GetMapping("/admin/consumables/type/{type}")
+    public ResponseEntity<?> getConsumablesByType(@PathVariable String type) {
+        return consumableService.getConsumablesByType(type);
+    }
+
+    @PostMapping("/admin/consumables/assign")
+    public ResponseEntity<ConsumableAssignment> assignConsumable(@RequestBody ConsumableAssignmentDTO assignment) {
+        return consumableService.assignConsumable(assignment);
+    }
+
+    @GetMapping("/admin/consumables/assignment")
+    public ResponseEntity<List<ConsumableAssignment>> getAssignments(@RequestBody ConsumableAssignment assignment) {
+        return consumableService.getAssignments(assignment);
+    }
+}
