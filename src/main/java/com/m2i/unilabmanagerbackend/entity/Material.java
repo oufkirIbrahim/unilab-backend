@@ -59,6 +59,10 @@ public class Material {
     )
     private Laboratory laboratory;
 
+    @Column(name = "lab_assignment_date")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date labAssignmentDate;
+
     @OneToMany(mappedBy = "material")
     @Column(insertable = false,updatable = false)
     @JsonIgnore
