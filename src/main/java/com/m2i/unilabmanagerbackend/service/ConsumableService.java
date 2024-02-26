@@ -26,9 +26,10 @@ public interface ConsumableService {
 
     ResponseEntity<ConsumableAssignment> assignConsumable(ConsumableAssignmentDTO assignmentDto);
 
-    ResponseEntity<List<ConsumableAssignment>> getAssignments(ConsumableAssignment assignment);
+    ResponseEntity<List<ConsumableAssignment>> getAssignments();
 
     void exportLabConsumables(HttpServletResponse response, Integer labId, Integer year) throws JRException, IOException;
 
 
+    ResponseEntity<List<ConsumableAssignment>> getAssignmentsByLabId(Integer labId);
 }

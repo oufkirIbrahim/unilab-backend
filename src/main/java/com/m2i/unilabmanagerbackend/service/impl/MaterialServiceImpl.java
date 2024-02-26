@@ -4,6 +4,7 @@ import com.m2i.unilabmanagerbackend.DTO.LabMaterialsDTO;
 import com.m2i.unilabmanagerbackend.DTO.MaterialAssignmentListDTO;
 import com.m2i.unilabmanagerbackend.entity.Laboratory;
 import com.m2i.unilabmanagerbackend.entity.Material;
+import com.m2i.unilabmanagerbackend.entity.User;
 import com.m2i.unilabmanagerbackend.repository.LabRepository;
 import com.m2i.unilabmanagerbackend.repository.MaterialRepository;
 import com.m2i.unilabmanagerbackend.repository.SupplierRepository;
@@ -21,10 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MaterialServiceImpl implements MaterialService {
@@ -201,7 +199,83 @@ public class MaterialServiceImpl implements MaterialService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getMaterialsByLabId(Integer labId) {
+        Laboratory laboratory = labRepository.findById(labId).get();
 
+        // Call the repository method to find materials by lab
+        List<Material> materials = materialRepository.findByLaboratory(laboratory);
+
+        if (!materials.isEmpty()) {
+            // Return materials and HTTP status OK if materials are found
+            return new ResponseEntity<>(materials, HttpStatus.OK);
+        } else {
+            // Return a message and HTTP status NOT_FOUND if no materials are found with the specified lab
+            return new ResponseEntity<>("No materials found : ", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @Override
+    public ResponseEntity<?> getMaterialsByUserId(Integer userId) {
+        User user = userRepository.findById(userId).get();
+
+        // Call the repository method to find materials by user
+        List<Material> materials = materialRepository.findByResponsiblePerson(user);
+
+        if (!materials.isEmpty()) {
+            // Return materials and HTTP status OK if materials are found
+            return new ResponseEntity<>(materials, HttpStatus.OK);
+        } else {
+            // Return a message and HTTP status NOT_FOUND if no materials are found with the specified user
+            return new ResponseEntity<>("No materials found : ", HttpStatus.NOT_FOUND);
+        }
+    }
+    @Override
+
+    public ResponseEntity<?> assignMaterialToLab(Integer materialId, Integer labId) {
+        Optional<Material> materialOptional = materialRepository.findById(materialId);
+        Optional<Laboratory> laboratoryOptional = labRepository.findById(labId);
+        if (materialOptional.isPresent() && laboratoryOptional.isPresent()) {
+            Material material = materialOptional.get();
+            Laboratory laboratory = laboratoryOptional.get();
+            material.setLaboratory(laboratory);
+            material.setLabAssignmentDate(new Date());
+            // Save the updated material
+            Material savedMaterial = materialRepository.save(material);
+            return new ResponseEntity<>(savedMaterial, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Laboratory or Material not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<?> assignMaterialToPerson(Integer materialId, Integer userId) {
+        Optional<Material> materialOptional = materialRepository.findById(materialId);
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (materialOptional.isPresent() && userOptional.isPresent()) {
+            Material material = materialOptional.get();
+            User user = userOptional.get();
+            material.setResponsiblePerson(user);
+            material.setAssignmentDate(new Date());
+            // Save the updated material
+            Material savedMaterial = materialRepository.save(material);
+            return new ResponseEntity<>(savedMaterial, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Laboratory or Material not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    private static Integer getRespId(Material material) {
+        return material.getResponsiblePerson().getUserId();
+    }
+    private static Integer getSupplId(Material material) {
+        return material.getSupplier().getSupplierId();
+    }
+
+    private static Integer getLabId(Material material){
+        return material.getLaboratory().getLabId();
+    }
+
+//======================================= Export pdf ==============================================
 
     public void exportAssignmentsPdf(HttpServletResponse response) throws JRException, IOException {
         List<Material> materials = materialRepository.findByResponsiblePersonIsNotNull(); // Fetch all materials from the database
@@ -259,16 +333,7 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
 
-    private static Integer getRespId(Material material) {
-        return material.getResponsiblePerson().getUserId();
-    }
-    private static Integer getSupplId(Material material) {
-        return material.getSupplier().getSupplierId();
-    }
 
-    private static Integer getLabId(Material material){
-        return material.getLaboratory().getLabId();
-    }
 
     private MaterialAssignmentListDTO mapToMaterialAssignmentListDTO(Material material) {
         MaterialAssignmentListDTO dto = new MaterialAssignmentListDTO();

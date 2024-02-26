@@ -1,6 +1,8 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
+import com.m2i.unilabmanagerbackend.entity.Laboratory;
 import com.m2i.unilabmanagerbackend.entity.User;
+import com.m2i.unilabmanagerbackend.repository.LabRepository;
 import com.m2i.unilabmanagerbackend.repository.UserRepository;
 import com.m2i.unilabmanagerbackend.service.PersonService;
 import com.m2i.unilabmanagerbackend.utils.Util;
@@ -24,6 +26,8 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LabRepository labRepository;
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -127,4 +131,13 @@ public class PersonServiceImpl implements PersonService {
         return new ResponseEntity<>("User not found ", HttpStatus.NOT_FOUND);
     }
 
+
+    @Override
+    public ResponseEntity<?> getUserByLabId(Integer labId) {
+        List<User> users = userRepository.findUsersByLabId(labId);
+        if(!users.isEmpty()){
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("No Users found ", HttpStatus.NOT_FOUND);
+    }
 }

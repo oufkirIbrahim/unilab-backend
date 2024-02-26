@@ -156,18 +156,40 @@ public class ConsumableServiceImpl implements ConsumableService {
 
     @Override
     public ResponseEntity<ConsumableAssignment> assignConsumable(ConsumableAssignmentDTO assignmentDto) {
-        ConsumableAssignment assignment = new ConsumableAssignment(
-                 new ConsumableAssignmentKey(assignmentDto.getConsumableId(),assignmentDto.getLaboratoryId())
-                ,assignmentDto.getQuantity()
-                ,assignmentDto.getAssignmentDate()
-                ,consumableRepository.getReferenceById(assignmentDto.getConsumableId())
-                ,labRepository.getReferenceById(assignmentDto.getLaboratoryId())
-        );
+        ConsumableAssignment assignment = new ConsumableAssignment();
+        assignment.setQuantity(assignmentDto.getQuantity());
+        assignment.setConsumable(consumableRepository.getReferenceById(assignmentDto.getConsumableId()));
+        assignment.setLaboratory(labRepository.getReferenceById(assignmentDto.getLaboratoryId()));
         ConsumableAssignment savesAssignment = assignmentRepository.save(assignment);
         return new ResponseEntity<>(savesAssignment, HttpStatus.CREATED);
     }
 
+    @Override
+    public ResponseEntity<List<ConsumableAssignment>> getAssignments() {
+        List<ConsumableAssignment> assignments = assignmentRepository.findAll();
+        if(!assignments.isEmpty()){
+            return new ResponseEntity<>(assignments, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
+    @Override
+    public ResponseEntity<List<ConsumableAssignment>> getAssignmentsByLabId(Integer labId) {
+        Optional<Laboratory> laboratory = labRepository.findById(labId);
+        if(laboratory.isPresent()){
+            List<ConsumableAssignment> assignments = assignmentRepository.findByLaboratory(laboratory.get());
+            if(!assignments.isEmpty()){
+                return new ResponseEntity<>(assignments, HttpStatus.OK);
+            }
+
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+    //=============================================== export pdf =====================================================
     public void exportLabConsumables(HttpServletResponse response, Integer labId, Integer year) throws JRException, IOException {
         Laboratory lab = labRepository.getReferenceById(labId);
 
@@ -207,12 +229,5 @@ public class ConsumableServiceImpl implements ConsumableService {
                 .build();
     }
 
-    @Override
-    public ResponseEntity<List<ConsumableAssignment>> getAssignments(ConsumableAssignment assignment) {
-        List<ConsumableAssignment> assignments = assignmentRepository.findAll();
-        if(!assignments.isEmpty()){
-            return new ResponseEntity<>(assignments, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
+
 }

@@ -14,6 +14,8 @@ public interface ConsumablesOrderService {
 
     ResponseEntity<List<ConsumableOrder>> getConsumablesOrders();
 
+    ResponseEntity<List<ConsumableOrder>> getConsumablesOrdersByLabId(Integer labId);
+
     ResponseEntity<ConsumableOrder> setConsumablesOrderStatus(Integer id, ApprovalStatus status);
 
     ResponseEntity<List<ConsumableOrder>> getConsumableOrdersByUserId(Integer id);

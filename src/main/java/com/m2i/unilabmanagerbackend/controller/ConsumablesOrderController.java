@@ -1,10 +1,8 @@
 package com.m2i.unilabmanagerbackend.controller;
 
 import com.m2i.unilabmanagerbackend.DTO.ConsumablesOrderDTO;
-import com.m2i.unilabmanagerbackend.DTO.MaterialOrderDTO;
 import com.m2i.unilabmanagerbackend.entity.ApprovalStatus;
 import com.m2i.unilabmanagerbackend.entity.ConsumableOrder;
-import com.m2i.unilabmanagerbackend.entity.MaterialOrder;
 import com.m2i.unilabmanagerbackend.service.ConsumablesOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,18 +21,18 @@ public class ConsumablesOrderController {
         return orderService.orderConsumables(consumablesOrderDTO);
     }
 
-    @GetMapping({"/user/orders/consumables/userId/{id}", "/admin/orders/consumables/userId/{id}"})
+    @GetMapping("/user/orders/consumables/userId/{id}")
     public ResponseEntity<List<ConsumableOrder>> getConsumablesOrdersByUserId(@PathVariable Integer id) {
         return orderService.getConsumableOrdersByUserId(id);
     }
 
-    //-------------------------------------Admin--------------------------------------------
-    @GetMapping("/admin/orders/consumables")
-    public ResponseEntity<List<ConsumableOrder>> getConsumablesOrders() {
-        return orderService.getConsumablesOrders();
+    //-------------------------------------responsible--------------------------------------------
+    @GetMapping("/responsible/orders/consumables/labId/{labId}")
+    public ResponseEntity<List<ConsumableOrder>> getConsumablesOrdersByLabId(@PathVariable Integer labId) {
+        return orderService.getConsumablesOrdersByLabId(labId);
     }
 
-    @PutMapping("/admin/orders/consumables/{id}/{status}")
+    @PatchMapping("/responsible/orders/consumables/{id}/{status}")
     public ResponseEntity<ConsumableOrder> setConsumablesOrderStatus(@PathVariable Integer id, @PathVariable ApprovalStatus status){
         return orderService.setConsumablesOrderStatus(id,status);
     }

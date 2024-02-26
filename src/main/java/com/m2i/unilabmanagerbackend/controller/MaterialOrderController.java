@@ -27,13 +27,13 @@ public class MaterialOrderController {
     public ResponseEntity<List<MaterialOrder>> getMaterialsOrdersByUserId(@PathVariable Integer id) {
         return materialOrderService.getMaterialsOrdersByUserId(id);
     }
-    //-------------------------------------Admin--------------------------------------------
-    @GetMapping("/admin/orders/materials")
+    //-------------------------------------responsible--------------------------------------------
+    @GetMapping("/responsible/orders/materials")
     public ResponseEntity<List<MaterialOrder>> getMaterialsOrders() {
         return materialOrderService.getMaterialsOrders();
     }
 
-    @PutMapping("/admin/orders/materials/{id}/{status}")
+    @PatchMapping("/responsible/orders/materials/{id}/{status}")
     public ResponseEntity<MaterialOrder> setMaterialOrderStatus(@PathVariable Integer id, @PathVariable ApprovalStatus status){
         return materialOrderService.setMaterialOrderStatus(id,status);
     }

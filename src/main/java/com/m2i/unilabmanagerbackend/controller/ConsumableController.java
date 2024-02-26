@@ -49,13 +49,19 @@ public class ConsumableController {
         return consumableService.getConsumablesByType(type);
     }
 
-    @PostMapping("/admin/consumables/assign")
+    @PostMapping("/admin/consumables/assignments")
     public ResponseEntity<ConsumableAssignment> assignConsumable(@RequestBody ConsumableAssignmentDTO assignment) {
         return consumableService.assignConsumable(assignment);
     }
 
-    @GetMapping("/admin/consumables/assignment")
-    public ResponseEntity<List<ConsumableAssignment>> getAssignments(@RequestBody ConsumableAssignment assignment) {
-        return consumableService.getAssignments(assignment);
+    @GetMapping("/admin/consumables/assignments")
+    public ResponseEntity<List<ConsumableAssignment>> getAssignments() {
+        return consumableService.getAssignments();
+    }
+
+    //get assignments by lab:
+    @GetMapping("/responsible/consumables/assignments/labId/{labId}")
+    public ResponseEntity<List<ConsumableAssignment>> getAssignmentsByLabId(@PathVariable Integer labId) {
+        return consumableService.getAssignmentsByLabId(labId);
     }
 }

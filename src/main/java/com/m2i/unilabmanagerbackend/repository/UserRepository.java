@@ -1,5 +1,6 @@
 package com.m2i.unilabmanagerbackend.repository;
 
+import com.m2i.unilabmanagerbackend.entity.Laboratory;
 import com.m2i.unilabmanagerbackend.entity.Role;
 import com.m2i.unilabmanagerbackend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,4 +22,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     List<User> findAllByFirstnameContainingIgnoreCase(String firstname);
     List<User> findAllByLastnameContainingIgnoreCase(String firstname);
+
+    List<User> findUsersByLabId(Integer labId);
 }

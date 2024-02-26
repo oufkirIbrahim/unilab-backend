@@ -27,4 +27,5 @@ public interface PersonService {
 
     ResponseEntity<?> getUserByLastName(String lastname);
 
+    ResponseEntity<?> getUserByLabId(Integer labId);
 }

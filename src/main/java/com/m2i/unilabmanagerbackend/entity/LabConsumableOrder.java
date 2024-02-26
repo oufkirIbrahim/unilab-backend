@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ConsumableOrder {
+public class LabConsumableOrder {
 
     @Id
     @Column(name = "order_id")
@@ -28,10 +28,10 @@ public class ConsumableOrder {
 
     @ManyToOne
     @JoinColumn(
-            name = "person_id",
-            referencedColumnName = "person_id"
+            name = "laboratory_id",
+            referencedColumnName = "laboratory_id"
     )
-    private User person;
+    private Laboratory laboratory;
 
 
     @ManyToOne
@@ -40,7 +40,6 @@ public class ConsumableOrder {
             referencedColumnName = "consumable_id"
     )
     private Consumable consumable;
-
 
 
     @PrePersist

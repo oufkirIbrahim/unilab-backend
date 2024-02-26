@@ -16,8 +16,10 @@ import java.util.Date;
 @Builder
 public class ConsumableAssignment implements Serializable {
 
-    @EmbeddedId
-    private ConsumableAssignmentKey id;
+    @Id
+    @Column(name = "assign_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private Integer quantity;
 
@@ -26,14 +28,25 @@ public class ConsumableAssignment implements Serializable {
     private Date assignmentDate;
 
     @ManyToOne
-    @MapsId("consumableId")
-    @JoinColumn(name = "consumable_id")
+    @JoinColumn(
+            name = "consumable_id",
+            referencedColumnName = "consumable_id"
+    )
     private Consumable consumable;
 
     @ManyToOne
-    @MapsId("labId")
-    @JoinColumn(name = "laboratory_id")
+    @JoinColumn(
+            name = "laboratory_id",
+            referencedColumnName = "laboratory_id"
+    )
     private Laboratory laboratory;
+
+//    @ManyToOne
+//    @JoinColumn(
+//            name = "person_id",
+//            referencedColumnName = "person_id"
+//    )
+//    private User person;
 
     @PrePersist
     public void prePersist() {

@@ -2,17 +2,18 @@ package com.m2i.unilabmanagerbackend.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
-@Table
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class ConsumableOrder {
+@Builder
+public class LabMaterialOrder {
 
     @Id
     @Column(name = "order_id")
@@ -24,23 +25,20 @@ public class ConsumableOrder {
 
     private ApprovalStatus approvalStatus;
 
-    private Integer quantity;
+    @ManyToOne
+    @JoinColumn(
+            name = "laboratory_id",
+            referencedColumnName = "laboratory_id"
+    )
+    private Laboratory laboratory;
+
 
     @ManyToOne
     @JoinColumn(
-            name = "person_id",
-            referencedColumnName = "person_id"
+            name = "material_id",
+            referencedColumnName = "material_id"
     )
-    private User person;
-
-
-    @ManyToOne
-    @JoinColumn(
-            name = "consumable_id",
-            referencedColumnName = "consumable_id"
-    )
-    private Consumable consumable;
-
+    private Material material;
 
 
     @PrePersist

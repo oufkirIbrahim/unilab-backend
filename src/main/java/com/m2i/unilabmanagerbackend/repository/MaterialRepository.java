@@ -3,6 +3,7 @@ package com.m2i.unilabmanagerbackend.repository;
 import com.m2i.unilabmanagerbackend.entity.ConsumableAssignment;
 import com.m2i.unilabmanagerbackend.entity.Laboratory;
 import com.m2i.unilabmanagerbackend.entity.Material;
+import com.m2i.unilabmanagerbackend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,8 @@ public interface MaterialRepository extends JpaRepository<Material,Integer> {
 
     @Query("SELECT ma FROM Material ma WHERE ma.laboratory = :lab AND YEAR(ma.labAssignmentDate) = :year order by ma.assignmentDate")
     List<Material> findByLaboratoryAndYear(Laboratory lab, int year);
+
+    List<Material> findByLaboratory(Laboratory laboratory);
+
+    List<Material> findByResponsiblePerson(User user);
 }

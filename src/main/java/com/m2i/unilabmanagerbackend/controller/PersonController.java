@@ -35,7 +35,7 @@ public class PersonController {
         return personService.deleteUserById(id);
     }
 
-    @GetMapping("/admin/persons/id/{id}")
+    @GetMapping({"/admin/persons/id/{id}", "/responsible/persons/id/{id}", "/user/persons/id/{id}"})
     public ResponseEntity<?> getUserById(@PathVariable Integer id) {
         return personService.getUserById(id);
     }
@@ -63,5 +63,10 @@ public class PersonController {
     @GetMapping("/admin/persons/lastname/{lastname}")
     public ResponseEntity<?> getUserByLastname(@PathVariable String lastname) {
         return personService.getUserByLastName(lastname);
+    }
+
+    @GetMapping("/responsible/persons/labId/{labId}")
+    public ResponseEntity<?> getUserByLabId(@PathVariable Integer labId) {
+        return personService.getUserByLabId(labId);
     }
 }

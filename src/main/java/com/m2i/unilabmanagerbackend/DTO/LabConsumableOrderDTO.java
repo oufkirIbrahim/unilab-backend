@@ -5,18 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConsumablesOrderDTO {
+public class LabConsumableOrderDTO {
 
     private Integer consumableId;
 
-    private Integer personId;
-
-    //private final Date requestDate = new Date();
+    private Integer LabId;
 
     private Integer quantity;
 

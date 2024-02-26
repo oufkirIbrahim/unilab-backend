@@ -50,4 +50,28 @@ public class MaterialController {
         return materialService.getMaterialsByType(type);
     }
 
+    //assign material to laboratory
+    @PatchMapping("/admin/materials/assignments/{materialId}/{labId}")
+    public ResponseEntity<?> assignMaterialToLab(@PathVariable Integer materialId, @PathVariable Integer labId) {
+        return materialService.assignMaterialToLab(materialId, labId);
+    }
+
+    //assign material to person
+    @PatchMapping("/responsible/materials/assignments/{materialId}/{userId}")
+    public ResponseEntity<?> assignMaterialToPerson(@PathVariable Integer materialId, @PathVariable Integer userId) {
+        return materialService.assignMaterialToPerson(materialId, userId);
+    }
+
+    //get material by labId
+    @GetMapping("/responsible/materials/labId/{labId}")
+    public ResponseEntity<?> getMaterialByLabId(@PathVariable Integer labId) {
+        return materialService.getMaterialsByLabId(labId);
+    }
+    //get material by userId
+
+    @GetMapping("/user/materials/userId/{userId}")
+    public ResponseEntity<?> getMaterialByUserId(@PathVariable Integer userId) {
+        return materialService.getMaterialsByUserId(userId);
+    }
+
 }

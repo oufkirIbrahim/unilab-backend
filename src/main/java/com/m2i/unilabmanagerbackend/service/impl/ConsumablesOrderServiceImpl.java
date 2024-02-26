@@ -1,12 +1,10 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
 import com.m2i.unilabmanagerbackend.DTO.ConsumablesOrderDTO;
-import com.m2i.unilabmanagerbackend.entity.ApprovalStatus;
-import com.m2i.unilabmanagerbackend.entity.Consumable;
-import com.m2i.unilabmanagerbackend.entity.ConsumableOrder;
-import com.m2i.unilabmanagerbackend.entity.User;
+import com.m2i.unilabmanagerbackend.entity.*;
 import com.m2i.unilabmanagerbackend.repository.ConsumableRepository;
 import com.m2i.unilabmanagerbackend.repository.ConsumablesOrderRepository;
+import com.m2i.unilabmanagerbackend.repository.LabRepository;
 import com.m2i.unilabmanagerbackend.repository.UserRepository;
 import com.m2i.unilabmanagerbackend.service.ConsumablesOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +29,14 @@ public class ConsumablesOrderServiceImpl implements ConsumablesOrderService {
     @Autowired
     private ConsumableRepository consumableRepository;
 
+    @Autowired
+    private LabRepository labRepository;
+
     @Override
     public ResponseEntity<ConsumableOrder> orderConsumables(ConsumablesOrderDTO consumablesOrderDTO) {
         User user = userRepository.findById(consumablesOrderDTO.getPersonId()).get();
         Consumable consumables = consumableRepository.findById(consumablesOrderDTO.getConsumableId()).get();
-        System.out.println(consumablesOrderDTO);
+        Laboratory laboratory = labRepository.findById(user.getLabId()).get();
         if(user.getUserId() != null && consumables.getConsumableId() != null){
             ConsumableOrder consumablesOrder = new ConsumableOrder();
             consumablesOrder.setConsumable(consumables);
@@ -58,6 +59,14 @@ public class ConsumablesOrderServiceImpl implements ConsumablesOrderService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Override
+    public ResponseEntity<List<ConsumableOrder>> getConsumablesOrdersByLabId(Integer labId) {
+        List<ConsumableOrder> orders = consumablesOrderRepository.findConsumableOrdersByLabId(labId);
+        if(!orders.isEmpty()){
+            return new ResponseEntity<>(orders, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     @Override
     public ResponseEntity<ConsumableOrder> setConsumablesOrderStatus(Integer id, ApprovalStatus status) {

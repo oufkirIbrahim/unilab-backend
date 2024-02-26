@@ -12,7 +12,6 @@ public class ConsumableAssignmentDTO {
 
     private Integer consumableId;
 
-
     private Integer quantity;
 
     private Date assignmentDate;

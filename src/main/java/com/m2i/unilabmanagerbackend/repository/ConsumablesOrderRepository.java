@@ -1,6 +1,7 @@
 package com.m2i.unilabmanagerbackend.repository;
 
 import com.m2i.unilabmanagerbackend.entity.ConsumableOrder;
+import com.m2i.unilabmanagerbackend.entity.LabMaterialOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,10 @@ import java.util.Optional;
 @Repository
 public interface ConsumablesOrderRepository extends JpaRepository<ConsumableOrder,Integer> {
 
-    @Query("SELECT C FROM ConsumableOrder C where C.person.userId = :id")
+    @Query("SELECT CO FROM ConsumableOrder CO where CO.person.userId = :id")
     Optional<List<ConsumableOrder>> findConsumableOrdersByPersonId(Integer id);
+
+    @Query("SELECT CO FROM ConsumableOrder CO where CO.person.labId= :labId")
+    List<ConsumableOrder> findConsumableOrdersByLabId(Integer labId);
+
 }

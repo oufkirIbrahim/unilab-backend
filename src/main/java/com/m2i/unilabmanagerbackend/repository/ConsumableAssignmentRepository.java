@@ -14,4 +14,6 @@ public interface ConsumableAssignmentRepository extends JpaRepository<Consumable
 
     @Query("SELECT ca FROM ConsumableAssignment ca WHERE ca.laboratory = :lab AND YEAR(ca.assignmentDate) = :year order by ca.assignmentDate")
     List<ConsumableAssignment> findByLaboratoryAndYear(Laboratory lab, int year);
+
+    List<ConsumableAssignment> findByLaboratory(Laboratory laboratory);
 }
