@@ -2,21 +2,30 @@ package com.m2i.unilabmanagerbackend.service.impl;
 
 
 import com.m2i.unilabmanagerbackend.DTO.ConsumableAssignmentDTO;
+import com.m2i.unilabmanagerbackend.DTO.ConsumablesAssignmentList;
 import com.m2i.unilabmanagerbackend.entity.Consumable;
 import com.m2i.unilabmanagerbackend.entity.ConsumableAssignment;
 import com.m2i.unilabmanagerbackend.entity.ConsumableAssignmentKey;
+import com.m2i.unilabmanagerbackend.entity.Laboratory;
 import com.m2i.unilabmanagerbackend.repository.ConsumableAssignmentRepository;
 import com.m2i.unilabmanagerbackend.repository.ConsumableRepository;
 import com.m2i.unilabmanagerbackend.repository.LabRepository;
 import com.m2i.unilabmanagerbackend.service.ConsumableService;
 import com.m2i.unilabmanagerbackend.utils.Util;
+import jakarta.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -156,6 +165,46 @@ public class ConsumableServiceImpl implements ConsumableService {
         );
         ConsumableAssignment savesAssignment = assignmentRepository.save(assignment);
         return new ResponseEntity<>(savesAssignment, HttpStatus.CREATED);
+    }
+
+
+    public void exportLabConsumables(HttpServletResponse response, Integer labId, Integer year) throws JRException, IOException {
+        Laboratory lab = labRepository.getReferenceById(labId);
+
+        List<ConsumableAssignment> assignments = assignmentRepository.findByLaboratoryAndYear(lab,year); // Fetch all consumable assignments
+        assignments.add(0, assignments.get(0));
+        String labName = lab.getName();
+        // Map ConsumableAssignment entities to ConsumablesAssignmentList DTO
+        List<ConsumablesAssignmentList> assignmentsList = assignments.stream()
+                .map(this::mapToConsumablesAssignmentList)
+                .toList();
+
+        // Load the JRXML template from the classpath
+        InputStream templateStream = getClass().getResourceAsStream("/labConsumablesAssignments.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(templateStream);
+
+        // Create a data source
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(assignmentsList);
+
+        // Set report parameters (if needed)
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("tableSet", dataSource);
+        parameters.put("labName",labName);
+        parameters.put("year",year);
+        // Fill the Jasper report
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        // Export report to PDF and write to the response output stream
+        JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
+    }
+
+    private ConsumablesAssignmentList mapToConsumablesAssignmentList(ConsumableAssignment assignment) {
+        // Map ConsumableAssignment fields to ConsumablesAssignmentList fields
+        return ConsumablesAssignmentList.builder()
+                .consumableId(assignment.getConsumable().getConsumableId())
+                .consumableType(assignment.getConsumable().getType())
+                .quantity(assignment.getQuantity())
+                .build();
     }
 
     @Override

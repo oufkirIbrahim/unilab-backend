@@ -7,6 +7,7 @@ import com.m2i.unilabmanagerbackend.repository.SupplierRepository;
 import com.m2i.unilabmanagerbackend.repository.UserRepository;
 import com.m2i.unilabmanagerbackend.service.SupplierService;
 import com.m2i.unilabmanagerbackend.utils.Util;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,8 +38,10 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     public ResponseEntity<Supplier> saveSupplier(Supplier newSupplier) {
-        Integer respID = newSupplier.getResponsible().getUserId();
-        newSupplier.setResponsible(userRepository.findById(respID).get());
+        if(!ObjectUtils.isEmpty(newSupplier.getResponsible())) {
+            Integer respID = newSupplier.getResponsible().getUserId();
+            newSupplier.setResponsible(userRepository.findById(respID).get());
+        }
         Supplier savedSupplier = SupplierRepository.save(newSupplier);
 
         if (savedSupplier != null) {

@@ -23,5 +23,10 @@ public interface MaterialService {
 
     ResponseEntity<?> getMaterialsByType(String type);
 
-    void exportPdf(HttpServletResponse response) throws JRException, IOException;
+    void exportAssignmentsPdf(HttpServletResponse response) throws JRException, IOException;
+
+
+    public void exportLabMaterials(HttpServletResponse response,Integer labId,Integer year) throws JRException, IOException;
+
+
 }

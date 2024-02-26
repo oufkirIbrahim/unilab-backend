@@ -1,6 +1,8 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
+import com.m2i.unilabmanagerbackend.DTO.LabMaterialsDTO;
 import com.m2i.unilabmanagerbackend.DTO.MaterialAssignmentListDTO;
+import com.m2i.unilabmanagerbackend.entity.Laboratory;
 import com.m2i.unilabmanagerbackend.entity.Material;
 import com.m2i.unilabmanagerbackend.repository.LabRepository;
 import com.m2i.unilabmanagerbackend.repository.MaterialRepository;
@@ -16,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -203,9 +203,9 @@ public class MaterialServiceImpl implements MaterialService {
 
 
 
-    public void exportPdf(HttpServletResponse response) throws JRException, IOException {
-        List<Material> materials = materialRepository.findAll(); // Fetch all materials from the database
-
+    public void exportAssignmentsPdf(HttpServletResponse response) throws JRException, IOException {
+        List<Material> materials = materialRepository.findByResponsiblePersonIsNotNull(); // Fetch all materials from the database
+        materials.add(0, materials.get(0));
         // Map Material entities to MaterialAssignmentListDTO
         List<MaterialAssignmentListDTO> assignmentsList = materials.stream()
                 .map(this::mapToMaterialAssignmentListDTO)
@@ -227,6 +227,34 @@ public class MaterialServiceImpl implements MaterialService {
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         // Export report to PDF and write to the response output stream
+        JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
+    }
+
+    @Override
+    public void exportLabMaterials(HttpServletResponse response,Integer labId,Integer year) throws JRException, IOException {
+        Laboratory lab = labRepository.getReferenceById(labId);
+
+        List<Material> materials = materialRepository.findByLaboratoryAndYear(lab,year); // Fetch  materials
+        materials.add(0, materials.get(0));
+        // Map Material entities to LabMaterials DTO
+        List<LabMaterialsDTO> labMaterialsDTOList = materials.stream()
+                .map(this::mapToLabMaterials)
+                .toList();
+
+        // Load the JRXML template from the classpath
+        InputStream templateStream = getClass().getResourceAsStream("/labMaterialsAssignments.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(templateStream);
+
+        // Create a data source
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(labMaterialsDTOList);
+
+        // Set report parameters (if needed)
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("tableSet", dataSource);
+        parameters.put("labName",lab.getName());
+        parameters.put("year",year);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
         JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
     }
 
@@ -252,5 +280,15 @@ public class MaterialServiceImpl implements MaterialService {
         dto.setInvNum(material.getInventoryNumber());
         dto.setPersonId(material.getResponsiblePerson().getUserId());
         return dto;
+    }
+
+    private LabMaterialsDTO mapToLabMaterials(Material material) {
+        LabMaterialsDTO labMaterials = new LabMaterialsDTO();
+        labMaterials.setMaterialId(material.getMaterialId());
+        labMaterials.setMaterialType(material.getType());
+        labMaterials.setInvNum(material.getInventoryNumber());
+
+
+        return labMaterials;
     }
 }

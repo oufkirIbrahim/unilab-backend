@@ -1,17 +1,24 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
+import com.m2i.unilabmanagerbackend.DTO.LabDetailsDTO;
+import com.m2i.unilabmanagerbackend.DTO.LabMaterialsDTO;
 import com.m2i.unilabmanagerbackend.entity.Laboratory;
+import com.m2i.unilabmanagerbackend.entity.Material;
 import com.m2i.unilabmanagerbackend.entity.User;
 import com.m2i.unilabmanagerbackend.repository.LabRepository;
 import com.m2i.unilabmanagerbackend.repository.UserRepository;
 import com.m2i.unilabmanagerbackend.service.LaboratoryService;
+import jakarta.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.*;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 @Service
 public class LaboratoryServiceImpl implements LaboratoryService {
@@ -142,6 +149,70 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         } else {
             return new ResponseEntity<>("Laboratory not found with name: " + name, HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    @Override
+    public void exportLabDetails(HttpServletResponse response, Integer labId) throws JRException, IOException {
+        Laboratory lab = labRepository.getReferenceById(labId);
+
+        User resp = lab.getResponsiblePerson();
+        User deputy = lab.getDeputyPerson();
+
+        LabDetailsDTO respDto = LabDetailsDTO.builder()
+                .userId(resp.getUserId())
+                .role("Chef")
+                .firstname(resp.getFirstname())
+                .lastname(resp.getLastname())
+                .cin(resp.getCin())
+                .grade(resp.getGrade())
+                .som(resp.getSomNumber())
+                .email(resp.getEmail())
+                .phone(resp.getPhone())
+                .build();
+
+        LabDetailsDTO respDto1 = LabDetailsDTO.builder()
+                .userId(resp.getUserId())
+                .role("Chef")
+                .firstname(resp.getFirstname())
+                .lastname(resp.getLastname())
+                .cin(resp.getCin())
+                .grade(resp.getGrade())
+                .som(resp.getSomNumber())
+                .email(resp.getEmail())
+                .phone(resp.getPhone())
+                .build();
+        LabDetailsDTO deputyDto = LabDetailsDTO.builder()
+                .userId(deputy.getUserId())
+                .role("Adjoint")
+                .firstname(deputy.getFirstname())
+                .lastname(deputy.getLastname())
+                .cin(deputy.getCin())
+                .grade(deputy.getGrade())
+                .som(deputy.getSomNumber())
+                .email(deputy.getEmail())
+                .phone(deputy.getPhone())
+                .build();
+
+        List<LabDetailsDTO> tableSet  = new ArrayList<>();
+        tableSet.add(respDto);
+        tableSet.add(respDto1);
+        tableSet.add(deputyDto);
+        // Load the JRXML template from the classpath
+        InputStream templateStream = getClass().getResourceAsStream("/labDetails.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(templateStream);
+
+        // Create a data source
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(tableSet);
+
+        // Set report parameters (if needed)
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("labDataSet", dataSource);
+        parameters.put("labName",lab.getName());
+        parameters.put("labId",lab.getLabId());
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
     }
 
 }
