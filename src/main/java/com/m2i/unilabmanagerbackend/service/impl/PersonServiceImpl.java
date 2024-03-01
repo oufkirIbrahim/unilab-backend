@@ -1,8 +1,12 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
 import com.m2i.unilabmanagerbackend.entity.Laboratory;
+import com.m2i.unilabmanagerbackend.entity.Material;
+import com.m2i.unilabmanagerbackend.entity.Supplier;
 import com.m2i.unilabmanagerbackend.entity.User;
 import com.m2i.unilabmanagerbackend.repository.LabRepository;
+import com.m2i.unilabmanagerbackend.repository.MaterialRepository;
+import com.m2i.unilabmanagerbackend.repository.SupplierRepository;
 import com.m2i.unilabmanagerbackend.repository.UserRepository;
 import com.m2i.unilabmanagerbackend.service.PersonService;
 import com.m2i.unilabmanagerbackend.utils.Util;
@@ -28,6 +32,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private LabRepository labRepository;
+
+    @Autowired
+    private MaterialRepository materialRepository;
+
+    @Autowired
+    private SupplierRepository supplierRepository;
+
     @Override
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userRepository.findAll();
@@ -57,13 +68,40 @@ public class PersonServiceImpl implements PersonService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            System.out.println(user.toString());
-            userRepository.delete(user);
+            Optional<Laboratory> lab = labRepository.findByResponsiblePersonUserId(user.getUserId());
+
+            if(lab.isPresent()){
+                Laboratory laboratory = lab.get();
+                laboratory.setResponsiblePerson(null);
+                labRepository.save(laboratory);
+            }
+            lab = labRepository.findByDeputyPersonUserId(user.getUserId());
+            if(lab.isPresent()){
+                Laboratory laboratory = lab.get();
+                laboratory.setDeputyPerson(null);
+                labRepository.save(laboratory);
+            }
+            List<Material> materials = materialRepository.findByResponsiblePerson(user);
+            if(!materials.isEmpty()){
+                for (Material material : materials) {
+                    material.setResponsiblePerson(null);
+                    materialRepository.save(material);
+                }
+            }
+            List<Supplier> suppliers = supplierRepository.findByResponsible(user);
+            if(!suppliers.isEmpty()){
+                for(Supplier supplier : suppliers){
+                    supplier.setResponsible(null);
+                    supplierRepository.save(supplier);
+                }
+            }
+            userRepository.deleteById(id);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         } else {
             return new ResponseEntity<>("User not found with id: " + id, HttpStatus.NOT_FOUND);
         }
     }
+
 
     public ResponseEntity<?> updateUser(Integer userId, User updatedUser) {
         if (userRepository.existsById(userId)) {

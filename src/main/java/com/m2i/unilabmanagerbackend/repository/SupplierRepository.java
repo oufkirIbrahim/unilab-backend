@@ -1,6 +1,7 @@
 package com.m2i.unilabmanagerbackend.repository;
 
 import com.m2i.unilabmanagerbackend.entity.Supplier;
+import com.m2i.unilabmanagerbackend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,5 @@ public interface SupplierRepository extends JpaRepository<Supplier,Integer> {
     Optional<Supplier> findByEmailContaining(String email);
     List<Supplier> findAllByNameContainingIgnoreCase(String name);
 
+    List<Supplier> findByResponsible(User user);
 }

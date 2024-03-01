@@ -66,7 +66,7 @@ public class User implements UserDetails {
     private Laboratory labDeputy;
 
 
-    @OneToMany(mappedBy = "person")
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL)
     @Column(insertable = false,updatable = false)
     @JsonIgnore
     private List<MaterialOrder> orders;

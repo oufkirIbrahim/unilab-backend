@@ -27,7 +27,6 @@ public class MaterialOrder {
     private ApprovalStatus approvalStatus;
 
     @ManyToOne
-
     @JoinColumn(
             name = "person_id",
             referencedColumnName = "person_id"
