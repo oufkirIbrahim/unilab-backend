@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface LabConsumablesOrderRepository extends JpaRepository<LabConsumableOrder,Integer> {
 
-    @Query("SELECT LO FROM LabConsumableOrder LO where LO.laboratory.labId  = :id")
+    @Query("SELECT LO FROM LabConsumableOrder LO where LO.laboratory.laboratoryId  = :id")
     List<LabConsumableOrder> findConsumablesOrdersByLabId(Integer id);
 
 }

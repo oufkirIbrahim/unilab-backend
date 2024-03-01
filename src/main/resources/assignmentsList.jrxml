@@ -62,11 +62,11 @@
             </rectangle>
             <image>
                 <reportElement x="27" y="5" width="70" height="69" uuid="d5371d52-05cb-480b-8795-dab26299e0c6"/>
-                <imageExpression><![CDATA["/home/yonkoibra/Pictures/fso.png"]]></imageExpression>
+                <imageExpression><![CDATA["assets/fso.png"]]></imageExpression>
             </image>
             <image>
                 <reportElement x="460" y="14" width="80" height="50" uuid="8e766d1f-787c-4630-889f-91dae4636fcf"/>
-                <imageExpression><![CDATA["/home/yonkoibra/Downloads/unilabLogo.png"]]></imageExpression>
+                <imageExpression><![CDATA["assets/logo.png"]]></imageExpression>
             </image>
             <textField>
                 <reportElement x="120" y="10" width="330" height="15" uuid="22cee3de-a42d-415d-b6de-49e0d34a4cce"/>

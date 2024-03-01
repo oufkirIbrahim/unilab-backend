@@ -14,7 +14,7 @@ public class LabMaterialOrderDTO {
 
     private Integer materialId;
 
-    private Integer labID;
+    private Integer laboratoryId;
 
     private Date requestDate;
 

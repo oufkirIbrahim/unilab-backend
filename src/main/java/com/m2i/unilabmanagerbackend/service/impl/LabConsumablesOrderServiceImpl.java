@@ -36,7 +36,7 @@ public class LabConsumablesOrderServiceImpl implements LabConsumablesOrderServic
             Laboratory laboratory = labRepository.findById(labConsumableOrderDTO.getLabId()).get();
             Consumable consumables = consumableRepository.findById(labConsumableOrderDTO.getConsumableId()).get();
 
-            if(laboratory.getLabId() != null && consumables.getConsumableId() != null){
+            if(laboratory.getLaboratoryId() != null && consumables.getConsumableId() != null){
                 LabConsumableOrder labConsumablesOrder = new LabConsumableOrder();
                 labConsumablesOrder.setConsumable(consumables);
                 labConsumablesOrder.setLaboratory(laboratory);

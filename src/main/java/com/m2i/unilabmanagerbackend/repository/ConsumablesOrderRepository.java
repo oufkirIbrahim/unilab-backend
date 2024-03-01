@@ -15,7 +15,7 @@ public interface ConsumablesOrderRepository extends JpaRepository<ConsumableOrde
     @Query("SELECT CO FROM ConsumableOrder CO where CO.person.userId = :id")
     Optional<List<ConsumableOrder>> findConsumableOrdersByPersonId(Integer id);
 
-    @Query("SELECT CO FROM ConsumableOrder CO where CO.person.labId= :labId")
+    @Query("SELECT CO FROM ConsumableOrder CO where CO.person.laboratoryId= :labId")
     List<ConsumableOrder> findConsumableOrdersByLabId(Integer labId);
 
 }

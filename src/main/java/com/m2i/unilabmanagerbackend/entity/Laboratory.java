@@ -17,7 +17,7 @@ public class Laboratory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "laboratory_id")
-    private Integer labId;
+    private Integer laboratoryId;
     private String name;
 
     @JsonManagedReference(value = "responsiblePerson")

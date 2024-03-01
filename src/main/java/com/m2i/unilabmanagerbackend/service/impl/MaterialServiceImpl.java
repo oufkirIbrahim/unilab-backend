@@ -64,24 +64,23 @@ public class MaterialServiceImpl implements MaterialService {
      */
     @Override
     public ResponseEntity<Material> saveMaterial(Material newMaterial) {
-        Integer respId = getRespId(newMaterial);
+
         Integer supplierId = getSupplId(newMaterial);
         Integer labId = getLabId(newMaterial);
-        // Set responsible person if ID is provided
-        if (respId != null) {
-            newMaterial.setResponsiblePerson(userRepository.findById(respId).orElse(null));
-        }
 
-        // Set supplier if ID is provided
-        if (supplierId != null) {
-            newMaterial.setSupplier(supplierRepository.findById(supplierId).orElse(null));
-        }
-
+        Material material = Material.builder()
+                .type(newMaterial.getType())
+                .inventoryNumber(newMaterial.getInventoryNumber())
+                .acquisitionDate(newMaterial.getAcquisitionDate())
+                .build();
+        if (supplierId != null)
+            material.setSupplier(supplierRepository.findById(supplierId).get());
         if(labId != null) {
-            newMaterial.setLaboratory(labRepository.getReferenceById(labId));
+            material.setLaboratory(labRepository.findById(labId).get());
+            material.setLabAssignmentDate(new Date());
         }
-
-        Material savedMaterial = materialRepository.save(newMaterial);
+        System.out.println("new material: " + newMaterial);
+        Material savedMaterial = materialRepository.save(material);
         return new ResponseEntity<>(savedMaterial, HttpStatus.CREATED);
     }
 
@@ -272,7 +271,7 @@ public class MaterialServiceImpl implements MaterialService {
     }
 
     private static Integer getLabId(Material material){
-        return material.getLaboratory().getLabId();
+        return material.getLaboratory().getLaboratoryId();
     }
 
 //======================================= Export pdf ==============================================
@@ -338,8 +337,8 @@ public class MaterialServiceImpl implements MaterialService {
     private MaterialAssignmentListDTO mapToMaterialAssignmentListDTO(Material material) {
         MaterialAssignmentListDTO dto = new MaterialAssignmentListDTO();
         dto.setMaterialId(material.getMaterialId());
-        dto.setFirstname(material.getResponsiblePerson().getFirstname());
-        dto.setLastname(material.getResponsiblePerson().getLastname());
+        dto.setFirstname(material.getResponsiblePerson().getFirstName());
+        dto.setLastname(material.getResponsiblePerson().getLastName());
         dto.setLabName(material.getLaboratory().getName());
         dto.setMaterialType(material.getType());
         dto.setInvNum(material.getInventoryNumber());

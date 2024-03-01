@@ -30,12 +30,12 @@ public class LabConsumablesOrderController {
     }
 
     //===============================================admin====================================================
-    @GetMapping("/admin/orders/consumables")
+    @GetMapping("/admin/orders/consumables/laboratories")
     public ResponseEntity<List<LabConsumableOrder>> getLabConsumablesOrders() {
         return labConsumablesOrderService.getLabConsumablesOrders();
     }
 
-    @PatchMapping("/admin/orders/consumables/{id}/{status}")
+    @PatchMapping("/admin/orders/consumables/laboratories/{id}/{status}")
     public ResponseEntity<LabConsumableOrder> setConsumablesOrderStatus(@PathVariable Integer id, @PathVariable ApprovalStatus status){
         return labConsumablesOrderService.setLabConsumablesOrderStatus(id,status);
     }

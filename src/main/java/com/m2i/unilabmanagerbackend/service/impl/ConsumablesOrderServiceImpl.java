@@ -36,7 +36,7 @@ public class ConsumablesOrderServiceImpl implements ConsumablesOrderService {
     public ResponseEntity<ConsumableOrder> orderConsumables(ConsumablesOrderDTO consumablesOrderDTO) {
         User user = userRepository.findById(consumablesOrderDTO.getPersonId()).get();
         Consumable consumables = consumableRepository.findById(consumablesOrderDTO.getConsumableId()).get();
-        Laboratory laboratory = labRepository.findById(user.getLabId()).get();
+        Laboratory laboratory = labRepository.findById(user.getLaboratoryId()).get();
         if(user.getUserId() != null && consumables.getConsumableId() != null){
             ConsumableOrder consumablesOrder = new ConsumableOrder();
             consumablesOrder.setConsumable(consumables);

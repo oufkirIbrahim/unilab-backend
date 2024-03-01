@@ -20,8 +20,8 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     Optional<User> findUserBySomNumberContaining(String som);
 
 
-    List<User> findAllByFirstnameContainingIgnoreCase(String firstname);
-    List<User> findAllByLastnameContainingIgnoreCase(String firstname);
+    List<User> findAllByFirstNameContainingIgnoreCase(String firstname);
+    List<User> findAllByLastNameContainingIgnoreCase(String firstname);
 
-    List<User> findUsersByLabId(Integer labId);
+    List<User> findUsersByLaboratoryId(Integer labId);
 }

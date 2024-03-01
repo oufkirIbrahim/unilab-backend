@@ -86,14 +86,11 @@ public class RubricServiceImpl implements RubricService {
             if(rubricBudget.getYear() != null)
                 existingRubric.getRubricBudget().setYear(rubricBudget.getYear());
 
-            if(rubricBudget.getEngaged_amount() != null)
-                existingRubric.getRubricBudget().setEngaged_amount(rubricBudget.getEngaged_amount());
+            if(rubricBudget.getEngagedAmount() != null)
+                existingRubric.getRubricBudget().setEngagedAmount(rubricBudget.getEngagedAmount());
 
-            if(rubricBudget.getAllocated_amount() != null)
-                existingRubric.getRubricBudget().setAllocated_amount(rubricBudget.getAllocated_amount());
-
-            if(rubricBudget.getRemaining_amount() != null)
-                existingRubric.getRubricBudget().setRemaining_amount(rubricBudget.getRemaining_amount());
+            if(rubricBudget.getAllocatedAmount() != null)
+                existingRubric.getRubricBudget().setAllocatedAmount(rubricBudget.getAllocatedAmount());
         }
         return existingRubric;
 

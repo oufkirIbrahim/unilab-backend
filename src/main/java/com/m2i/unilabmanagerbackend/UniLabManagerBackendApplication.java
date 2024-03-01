@@ -10,16 +10,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
-public class UniLabManagerBackendApplication implements CommandLineRunner{
+public class UniLabManagerBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UniLabManagerBackendApplication.class, args);
 	}
 
-	@Autowired
+	/*@Autowired
 	private UserRepository userRepository;
-
-	@Override
+*/
+	/*@Override
 	public void run(String... args) throws Exception {
 		User u = userRepository.findByRole(Role.USER);
 		if(u == null){
@@ -30,6 +30,6 @@ public class UniLabManagerBackendApplication implements CommandLineRunner{
 			user.setRole(Role.USER);
 			user.setPassword(new BCryptPasswordEncoder().encode("userpassword"));
 			userRepository.save(user);
-		}
+		}*/
 	}
-}
+

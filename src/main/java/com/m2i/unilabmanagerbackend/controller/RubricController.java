@@ -18,7 +18,7 @@ public class RubricController {
     @Autowired
     private RubricService rubricService;
 
-    @PostMapping
+    @PostMapping("/admin/rubrics")
     public Rubric saveRubric(@Valid @RequestBody Rubric rubric){
         return rubricService.saveRubric(rubric);
     }
@@ -33,17 +33,17 @@ public class RubricController {
         return rubricService.getAllRubric();
     }
 
-    @GetMapping("/admin/rubric/id/{id}")
+    @GetMapping("/admin/rubrics/id/{id}")
     public Rubric getRubricById(@PathVariable("id") Integer id) throws RubricNotFoundException {
         return rubricService.getRubricById(id);
     }
 
-    @GetMapping("/admin/rubric/code/{code}")
+    @GetMapping("/admin/rubrics/code/{code}")
     public Rubric getRubricByCode(@PathVariable("code") String code) throws RubricNotFoundException{
         return rubricService.getRubricByCode(code);
     }
 
-    @PutMapping("/admin/rubric/id/{id}")
+    @PutMapping("/admin/rubrics/id/{id}")
     public ResponseEntity<?> updateRubric(@PathVariable Integer id, @RequestBody Rubric rubric) throws RubricNotFoundException {
         try {
             ResponseEntity<?> updatedRubric = rubricService.updateRubric(id, rubric);
@@ -55,7 +55,7 @@ public class RubricController {
         }
     }
 
-    @DeleteMapping("/admin/rubric/id/{id}")
+    @DeleteMapping("/admin/rubrics/id/{id}")
     public ResponseEntity<?> deleteRubric(@PathVariable Integer id){
         return rubricService.deleteRubricById(id);
 

@@ -57,6 +57,7 @@ public class PersonServiceImpl implements PersonService {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
+            System.out.println(user.toString());
             userRepository.delete(user);
             return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
         } else {
@@ -118,14 +119,14 @@ public class PersonServiceImpl implements PersonService {
         return new ResponseEntity<>("User not found with SOM: " + som, HttpStatus.NOT_FOUND);
     }
     public ResponseEntity<?> getUserByFirstName(String firstname) {
-        List<User> users = userRepository.findAllByFirstnameContainingIgnoreCase(firstname);
+        List<User> users = userRepository.findAllByFirstNameContainingIgnoreCase(firstname);
         if(!users.isEmpty())
             return new ResponseEntity<>(users, HttpStatus.OK);
         return new ResponseEntity<>("User not found ", HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<?> getUserByLastName(String lastname) {
-        List<User> users = userRepository.findAllByLastnameContainingIgnoreCase(lastname);
+        List<User> users = userRepository.findAllByLastNameContainingIgnoreCase(lastname);
         if(!users.isEmpty())
             return new ResponseEntity<>(users, HttpStatus.OK);
         return new ResponseEntity<>("User not found ", HttpStatus.NOT_FOUND);
@@ -134,7 +135,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public ResponseEntity<?> getUserByLabId(Integer labId) {
-        List<User> users = userRepository.findUsersByLabId(labId);
+        List<User> users = userRepository.findUsersByLaboratoryId(labId);
         if(!users.isEmpty()){
             return new ResponseEntity<>(users, HttpStatus.OK);
         }

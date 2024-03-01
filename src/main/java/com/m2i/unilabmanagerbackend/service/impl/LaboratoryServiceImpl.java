@@ -162,8 +162,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         LabDetailsDTO respDto = LabDetailsDTO.builder()
                 .userId(resp.getUserId())
                 .role("Chef")
-                .firstname(resp.getFirstname())
-                .lastname(resp.getLastname())
+                .firstname(resp.getFirstName())
+                .lastname(resp.getLastName())
                 .cin(resp.getCin())
                 .grade(resp.getGrade())
                 .som(resp.getSomNumber())
@@ -174,8 +174,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         LabDetailsDTO respDto1 = LabDetailsDTO.builder()
                 .userId(resp.getUserId())
                 .role("Chef")
-                .firstname(resp.getFirstname())
-                .lastname(resp.getLastname())
+                .firstname(resp.getFirstName())
+                .lastname(resp.getLastName())
                 .cin(resp.getCin())
                 .grade(resp.getGrade())
                 .som(resp.getSomNumber())
@@ -185,8 +185,8 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         LabDetailsDTO deputyDto = LabDetailsDTO.builder()
                 .userId(deputy.getUserId())
                 .role("Adjoint")
-                .firstname(deputy.getFirstname())
-                .lastname(deputy.getLastname())
+                .firstname(deputy.getFirstName())
+                .lastname(deputy.getLastName())
                 .cin(deputy.getCin())
                 .grade(deputy.getGrade())
                 .som(deputy.getSomNumber())
@@ -209,7 +209,7 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("labDataSet", dataSource);
         parameters.put("labName",lab.getName());
-        parameters.put("labId",lab.getLabId());
+        parameters.put("labId",lab.getLaboratoryId());
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
         JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());

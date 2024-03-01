@@ -23,9 +23,11 @@ public class RubricBudget {
 
     private Integer year;
 
-    private Float allocated_amount;
-    private Float engaged_amount;
-    private Float remaining_amount;
+    @Column(name = "allocated_amount")
+    private Float allocatedAmount;
+
+    @Column(name = "engaged_amount")
+    private Float engagedAmount;
 
     @OneToOne(
             mappedBy = "rubricBudget",

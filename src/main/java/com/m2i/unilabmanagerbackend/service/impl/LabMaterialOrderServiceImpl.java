@@ -26,10 +26,10 @@ public class LabMaterialOrderServiceImpl implements LabMaterialOrderService {
     private MaterialRepository materialRepository;
     @Override
     public ResponseEntity<LabMaterialOrder> orderMaterial(LabMaterialOrderDTO labMaterialOrderDTO) {
-        Laboratory laboratory = labRepository.findById(labMaterialOrderDTO.getLabID()).get();
+        Laboratory laboratory = labRepository.findById(labMaterialOrderDTO.getLaboratoryId()).get();
         Material material = materialRepository.findById(labMaterialOrderDTO.getMaterialId()).get();
 
-        if(laboratory.getLabId() != null && material.getMaterialId() != null){
+        if(laboratory.getLaboratoryId() != null && material.getMaterialId() != null){
             LabMaterialOrder materialOrder = new LabMaterialOrder();
             materialOrder.setMaterial(material);
             materialOrder.setLaboratory(laboratory);
@@ -54,7 +54,6 @@ public class LabMaterialOrderServiceImpl implements LabMaterialOrderService {
     @Override
     public ResponseEntity<LabMaterialOrder> setMaterialOrderStatus(Integer id, ApprovalStatus status) {
         Optional<LabMaterialOrder> materialOrderOpt = labMaterialOrderRepository.findById(id);
-
         if(!materialOrderOpt.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

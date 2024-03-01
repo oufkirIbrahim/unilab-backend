@@ -28,9 +28,9 @@ public class User implements UserDetails {
     @Column(name = "person_id")
     private Integer userId;
     @Column(name = "first_name")
-    private String firstname;
+    private String firstName;
     @Column(name = "last_name")
-    private String lastname;
+    private String lastName;
     @Column(unique = true)
     private String email;
     @Column(unique = true)
@@ -47,14 +47,14 @@ public class User implements UserDetails {
     @Column(name = "bank_name")
     private String bankName;
     @Column(name = "rib")
-    private String RIB;
+    private String bankAccountNumber;
     @Column(name = "som_number")
     private String somNumber;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private Role role;
 
-    private Integer labId;
+    private Integer laboratoryId;
 
     @JsonBackReference(value = "responsiblePerson")
     @OneToOne(mappedBy = "responsiblePerson")

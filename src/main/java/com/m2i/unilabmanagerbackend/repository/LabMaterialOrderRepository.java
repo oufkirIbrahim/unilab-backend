@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface LabMaterialOrderRepository extends JpaRepository<LabMaterialOrder,Integer> {
-    @Query("SELECT LO FROM LabMaterialOrder LO where LO.laboratory.labId  = :id")
+    @Query("SELECT LO FROM LabMaterialOrder LO where LO.laboratory.laboratoryId  = :id")
     Optional<List<LabMaterialOrder>> findMaterialsOrdersByLabId(Integer id);
 
 }
