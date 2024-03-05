@@ -28,9 +28,10 @@ public class MaterialOrderController {
         return materialOrderService.getMaterialsOrdersByUserId(id);
     }
     //-------------------------------------responsible--------------------------------------------
-    @GetMapping("/responsible/orders/materials")
-    public ResponseEntity<List<MaterialOrder>> getMaterialsOrders() {
-        return materialOrderService.getMaterialsOrders();
+    @GetMapping("/responsible/orders/materials/labId/{labId}")
+    public ResponseEntity<List<MaterialOrder>> getMaterialsOrders(@PathVariable Integer labId) {
+        System.out.println("----------------------------" + labId);
+        return materialOrderService.getMaterialsOrders(labId);
     }
 
     @PatchMapping("/responsible/orders/materials/{id}/{status}")

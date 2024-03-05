@@ -14,4 +14,7 @@ public interface MaterialOrderRepository extends JpaRepository<MaterialOrder,Int
 
     @Query("SELECT M FROM MaterialOrder M where M.person.userId  = :id")
     Optional<List<MaterialOrder>> findMaterialsOrdersById(Integer id);
+
+    @Query("select MO from MaterialOrder MO where MO.person.laboratoryId = :labId")
+    List<MaterialOrder> findByLabId(Integer labId);
 }

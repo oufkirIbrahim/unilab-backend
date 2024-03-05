@@ -33,7 +33,7 @@ public class LabMaterialOrderServiceImpl implements LabMaterialOrderService {
             LabMaterialOrder materialOrder = new LabMaterialOrder();
             materialOrder.setMaterial(material);
             materialOrder.setLaboratory(laboratory);
-            materialOrder.setApprovalStatus(labMaterialOrderDTO.getApprovalStatus());
+            materialOrder.setApprovalStatus(ApprovalStatus.PENDING);
             materialOrder.setRequestDate(labMaterialOrderDTO.getRequestDate());
             return new ResponseEntity<>(labMaterialOrderRepository.save(materialOrder), HttpStatus.CREATED);
         }

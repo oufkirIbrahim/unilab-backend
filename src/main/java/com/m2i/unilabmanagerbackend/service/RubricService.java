@@ -1,7 +1,6 @@
 package com.m2i.unilabmanagerbackend.service;
 
 import com.m2i.unilabmanagerbackend.entity.Rubric;
-import com.m2i.unilabmanagerbackend.entity.RubricBudget;
 import com.m2i.unilabmanagerbackend.error.RubricNotFoundException;
 import org.springframework.http.ResponseEntity;
 

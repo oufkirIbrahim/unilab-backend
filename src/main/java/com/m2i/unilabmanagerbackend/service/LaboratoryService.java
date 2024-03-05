@@ -23,4 +23,5 @@ public interface LaboratoryService {
 
     public void exportLabDetails(HttpServletResponse response, Integer labId) throws JRException, IOException;
 
+    ResponseEntity<?> getLaboratoryByResponsibleId(Integer id);
 }

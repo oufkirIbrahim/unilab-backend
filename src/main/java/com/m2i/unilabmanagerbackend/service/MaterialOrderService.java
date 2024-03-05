@@ -11,7 +11,7 @@ public interface MaterialOrderService {
     ResponseEntity<MaterialOrder> orderMaterial(MaterialOrderDTO materialOrderDTO);
 
 
-    ResponseEntity<List<MaterialOrder>> getMaterialsOrders();
+    ResponseEntity<List<MaterialOrder>> getMaterialsOrders(Integer labId);
 
     ResponseEntity<MaterialOrder> setMaterialOrderStatus(Integer id, ApprovalStatus status);
 

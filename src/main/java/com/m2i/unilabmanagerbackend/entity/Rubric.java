@@ -26,10 +26,9 @@ public class Rubric {
 
     private String designation;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(
-            name = "rubric_budget_id",
-            referencedColumnName = "rubric_budget_id"
-    )
-    private RubricBudget rubricBudget;
+    @Column(name = "allocated_amount")
+    private Float allocatedAmount;
+
+    @Column(name = "engaged_amount")
+    private Float engagedAmount;
 }

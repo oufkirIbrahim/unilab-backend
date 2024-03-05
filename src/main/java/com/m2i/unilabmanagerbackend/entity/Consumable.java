@@ -6,7 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -33,9 +35,19 @@ public class Consumable {
     )
     private Supplier supplier;
 
+    @ManyToOne
+    @JoinColumn(
+            name = "laboratory_id",
+            referencedColumnName = "laboratory_id"
+    )
+    private Laboratory laboratory;
 
-    @OneToMany(mappedBy = "consumable",fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<ConsumableAssignment> consumableAssignments;
+    @Column(name = "assignment_date")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date assignmentDate;
 
+    @PrePersist
+    public void prePersist() {
+        this.assignmentDate = new Date();
+    }
 }

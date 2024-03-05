@@ -65,7 +65,7 @@ public class PersonController {
         return personService.getUserByLastName(lastname);
     }
 
-    @GetMapping("/responsible/persons/labId/{labId}")
+    @GetMapping("/responsible/persons/laboratory/{labId}")
     public ResponseEntity<?> getUserByLabId(@PathVariable Integer labId) {
         return personService.getUserByLabId(labId);
     }

@@ -1,15 +1,10 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
-
-import com.m2i.unilabmanagerbackend.DTO.ConsumableAssignmentDTO;
 import com.m2i.unilabmanagerbackend.DTO.ConsumablesAssignmentList;
-import com.m2i.unilabmanagerbackend.entity.Consumable;
-import com.m2i.unilabmanagerbackend.entity.ConsumableAssignment;
-import com.m2i.unilabmanagerbackend.entity.ConsumableAssignmentKey;
-import com.m2i.unilabmanagerbackend.entity.Laboratory;
-import com.m2i.unilabmanagerbackend.repository.ConsumableAssignmentRepository;
+import com.m2i.unilabmanagerbackend.entity.*;
 import com.m2i.unilabmanagerbackend.repository.ConsumableRepository;
 import com.m2i.unilabmanagerbackend.repository.LabRepository;
+import com.m2i.unilabmanagerbackend.repository.UserRepository;
 import com.m2i.unilabmanagerbackend.service.ConsumableService;
 import com.m2i.unilabmanagerbackend.utils.Util;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ConsumableServiceImpl implements ConsumableService {
@@ -37,9 +29,9 @@ public class ConsumableServiceImpl implements ConsumableService {
     @Autowired
     private LabRepository labRepository;
 
-    @Autowired
-    private ConsumableAssignmentRepository assignmentRepository;
 
+    @Autowired
+    private UserRepository userRepository;
     /**
      * Retrieves all consumables from the database.
      *
@@ -64,6 +56,8 @@ public class ConsumableServiceImpl implements ConsumableService {
     @Override
     public ResponseEntity<Consumable> saveConsumable(Consumable newConsumable) {
 
+        Optional<Laboratory> laboratory = labRepository.findById(newConsumable.getLaboratory().getLaboratoryId());
+        laboratory.ifPresent(newConsumable::setLaboratory);
         Consumable savedConsumable = consumableRepository.save(newConsumable);
         return new ResponseEntity<>(savedConsumable, HttpStatus.CREATED);
     }
@@ -79,7 +73,11 @@ public class ConsumableServiceImpl implements ConsumableService {
     @Override
     public ResponseEntity<?> updateConsumable(Integer id, Consumable updatedConsumable) {
         Optional<Consumable> existingConsumableOptional = consumableRepository.findById(id);
-
+        Optional<Laboratory> laboratory = labRepository.findById( updatedConsumable.getLaboratory().getLaboratoryId() );
+        if(laboratory.isPresent()){
+            updatedConsumable.setLaboratory(laboratory.get());
+            updatedConsumable.setAssignmentDate(new Date());
+        }
         if (existingConsumableOptional.isPresent()) {
             Consumable existingConsumable = existingConsumableOptional.get();
 
@@ -154,32 +152,32 @@ public class ConsumableServiceImpl implements ConsumableService {
     }
 
 
-    @Override
-    public ResponseEntity<ConsumableAssignment> assignConsumable(ConsumableAssignmentDTO assignmentDto) {
-        ConsumableAssignment assignment = new ConsumableAssignment();
-        assignment.setQuantity(assignmentDto.getQuantity());
-        assignment.setConsumable(consumableRepository.getReferenceById(assignmentDto.getConsumableId()));
-        assignment.setLaboratory(labRepository.getReferenceById(assignmentDto.getLaboratoryId()));
-        ConsumableAssignment savesAssignment = assignmentRepository.save(assignment);
-        return new ResponseEntity<>(savesAssignment, HttpStatus.CREATED);
-    }
+//    @Override
+//    public ResponseEntity<ConsumableAssignment> assignConsumable(ConsumableAssignmentDTO assignmentDto) {
+//        ConsumableAssignment assignment = new ConsumableAssignment();
+//        assignment.setQuantity(assignmentDto.getQuantity());
+//        assignment.setConsumable(consumableRepository.getReferenceById(assignmentDto.getConsumableId()));
+//        assignment.setLaboratory(labRepository.getReferenceById(assignmentDto.getLaboratoryId()));
+//        ConsumableAssignment savesAssignment = assignmentRepository.save(assignment);
+//        return new ResponseEntity<>(savesAssignment, HttpStatus.CREATED);
+//    }
+//
+//    @Override
+//    public ResponseEntity<List<ConsumableAssignment>> getAssignments() {
+//        List<ConsumableAssignment> assignments = assignmentRepository.findAll();
+//        if(!assignments.isEmpty()){
+//            return new ResponseEntity<>(assignments, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//    }
 
     @Override
-    public ResponseEntity<List<ConsumableAssignment>> getAssignments() {
-        List<ConsumableAssignment> assignments = assignmentRepository.findAll();
-        if(!assignments.isEmpty()){
-            return new ResponseEntity<>(assignments, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
-    @Override
-    public ResponseEntity<List<ConsumableAssignment>> getAssignmentsByLabId(Integer labId) {
+    public ResponseEntity<List<Consumable>> getConsumablesByLabId(Integer labId) {
         Optional<Laboratory> laboratory = labRepository.findById(labId);
         if(laboratory.isPresent()){
-            List<ConsumableAssignment> assignments = assignmentRepository.findByLaboratory(laboratory.get());
-            if(!assignments.isEmpty()){
-                return new ResponseEntity<>(assignments, HttpStatus.OK);
+            List<Consumable> consumables = consumableRepository.findByLaboratory(laboratory.get());
+            if(!consumables.isEmpty()){
+                return new ResponseEntity<>(consumables, HttpStatus.OK);
             }
 
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -188,16 +186,33 @@ public class ConsumableServiceImpl implements ConsumableService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+//    @Override
+//    public ResponseEntity<List<Consumable>> getConsumablesByUserId(Integer userId) {
+//        Optional<User> user = userRepository.findById(userId);
+//        if(user.isPresent()){
+//            List<ConsumableAssignment> consumableAssignments = assignmentRepository.findByPerson
+//        }
+//    }
+
+
+    @Override
+    public ResponseEntity<List<?>> getConsumablesYears() {
+        List<Integer> years = consumableRepository.findDistinctYears();
+        if(!years.isEmpty()){
+            return new ResponseEntity<>(years, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     //=============================================== export pdf =====================================================
     public void exportLabConsumables(HttpServletResponse response, Integer labId, Integer year) throws JRException, IOException {
         Laboratory lab = labRepository.getReferenceById(labId);
 
-        List<ConsumableAssignment> assignments = assignmentRepository.findByLaboratoryAndYear(lab,year); // Fetch all consumable assignments
-        assignments.add(0, assignments.get(0));
+        List<Consumable> consumables = consumableRepository.findByLaboratoryAndYear(lab,year); // Fetch all consumable assignments
+        consumables.add(0, consumables.get(0));
         String labName = lab.getName();
         // Map ConsumableAssignment entities to ConsumablesAssignmentList DTO
-        List<ConsumablesAssignmentList> assignmentsList = assignments.stream()
+        List<ConsumablesAssignmentList> assignmentsList = consumables.stream()
                 .map(this::mapToConsumablesAssignmentList)
                 .toList();
 
@@ -220,11 +235,11 @@ public class ConsumableServiceImpl implements ConsumableService {
         JasperExportManager.exportReportToPdfStream(jasperPrint, response.getOutputStream());
     }
 
-    private ConsumablesAssignmentList mapToConsumablesAssignmentList(ConsumableAssignment assignment) {
+    private ConsumablesAssignmentList mapToConsumablesAssignmentList(Consumable assignment) {
         // Map ConsumableAssignment fields to ConsumablesAssignmentList fields
         return ConsumablesAssignmentList.builder()
-                .consumableId(assignment.getConsumable().getConsumableId())
-                .consumableType(assignment.getConsumable().getType())
+                .consumableId(assignment.getConsumableId())
+                .consumableType(assignment.getType())
                 .quantity(assignment.getQuantity())
                 .build();
     }

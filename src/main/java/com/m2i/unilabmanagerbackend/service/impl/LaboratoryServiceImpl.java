@@ -151,6 +151,17 @@ public class LaboratoryServiceImpl implements LaboratoryService {
         }
     }
 
+    @Override
+    public ResponseEntity<?> getLaboratoryByResponsibleId(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+        if(user.isPresent()){
+            Optional<Laboratory> laboratory = labRepository.findByResponsibleId(user.get().getUserId());
+            if(laboratory.isPresent()){
+                return new ResponseEntity<>(laboratory, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>("Laboratory not found with Responsible Id: " + id, HttpStatus.NOT_FOUND);
+    }
 
     @Override
     public void exportLabDetails(HttpServletResponse response, Integer labId) throws JRException, IOException {

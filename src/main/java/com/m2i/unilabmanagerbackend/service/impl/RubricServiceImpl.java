@@ -1,9 +1,7 @@
 package com.m2i.unilabmanagerbackend.service.impl;
 
 import com.m2i.unilabmanagerbackend.entity.Rubric;
-import com.m2i.unilabmanagerbackend.entity.RubricBudget;
 import com.m2i.unilabmanagerbackend.error.RubricNotFoundException;
-import com.m2i.unilabmanagerbackend.repository.RubricBudgetRepository;
 import com.m2i.unilabmanagerbackend.repository.RubricRepository;
 import com.m2i.unilabmanagerbackend.service.RubricService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,6 @@ public class RubricServiceImpl implements RubricService {
     @Autowired
     private RubricRepository rubricRepository;
 
-    @Autowired
-    private RubricBudgetRepository rubricBudgetRepository;
 
     @Override
     public Rubric saveRubric(Rubric rubric) {
@@ -81,16 +77,12 @@ public class RubricServiceImpl implements RubricService {
             existingRubric.setDesignation(newRubric.getDesignation());
         }
 
-        if(newRubric.getRubricBudget() != null){
-            RubricBudget rubricBudget = newRubric.getRubricBudget();
-            if(rubricBudget.getYear() != null)
-                existingRubric.getRubricBudget().setYear(rubricBudget.getYear());
+        if(newRubric.getAllocatedAmount() != null && !newRubric.getAllocatedAmount().isNaN()){
+            existingRubric.setAllocatedAmount(newRubric.getAllocatedAmount());
+        }
 
-            if(rubricBudget.getEngagedAmount() != null)
-                existingRubric.getRubricBudget().setEngagedAmount(rubricBudget.getEngagedAmount());
-
-            if(rubricBudget.getAllocatedAmount() != null)
-                existingRubric.getRubricBudget().setAllocatedAmount(rubricBudget.getAllocatedAmount());
+        if(newRubric.getEngagedAmount() != null && !newRubric.getEngagedAmount().isNaN()){
+            existingRubric.setEngagedAmount(newRubric.getEngagedAmount());
         }
         return existingRubric;
 

@@ -41,7 +41,8 @@ public class ConsumablesOrderServiceImpl implements ConsumablesOrderService {
             ConsumableOrder consumablesOrder = new ConsumableOrder();
             consumablesOrder.setConsumable(consumables);
             consumablesOrder.setPerson(user);
-            consumablesOrder.setApprovalStatus(consumablesOrderDTO.getApprovalStatus());
+            consumablesOrder.setApprovalStatus(ApprovalStatus.PENDING);
+            consumablesOrder.setQuantity(consumablesOrderDTO.getQuantity());
             //consumablesOrder.setRequestDate(consumablesOrderDTO.getRequestDate());
 
             return new ResponseEntity<>(consumablesOrderRepository.save(consumablesOrder), HttpStatus.CREATED);

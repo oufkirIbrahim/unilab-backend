@@ -37,4 +37,5 @@ public interface MaterialService {
     ResponseEntity<?> assignMaterialToPerson(Integer materialId, Integer userId);
 
 
+    ResponseEntity<List<?>> getMaterialsYears();
 }

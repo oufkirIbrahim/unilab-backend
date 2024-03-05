@@ -1,8 +1,6 @@
 package com.m2i.unilabmanagerbackend.service;
 
-import com.m2i.unilabmanagerbackend.DTO.ConsumableAssignmentDTO;
 import com.m2i.unilabmanagerbackend.entity.Consumable;
-import com.m2i.unilabmanagerbackend.entity.ConsumableAssignment;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +22,16 @@ public interface ConsumableService {
 
     ResponseEntity<?> getConsumablesByType(String type);
 
-    ResponseEntity<ConsumableAssignment> assignConsumable(ConsumableAssignmentDTO assignmentDto);
-
-    ResponseEntity<List<ConsumableAssignment>> getAssignments();
+//    ResponseEntity<ConsumableAssignment> assignConsumable(ConsumableAssignmentDTO assignmentDto);
+//
+//    ResponseEntity<List<ConsumableAssignment>> getAssignments();
 
     void exportLabConsumables(HttpServletResponse response, Integer labId, Integer year) throws JRException, IOException;
 
 
-    ResponseEntity<List<ConsumableAssignment>> getAssignmentsByLabId(Integer labId);
+    ResponseEntity<List<Consumable>> getConsumablesByLabId(Integer labId);
+
+    ResponseEntity<List<?>> getConsumablesYears();
+
+//    ResponseEntity<List<Consumable>> getConsumablesByUserId(Integer userId);
 }

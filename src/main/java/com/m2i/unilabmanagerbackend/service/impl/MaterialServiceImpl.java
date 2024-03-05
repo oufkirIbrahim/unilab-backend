@@ -263,6 +263,16 @@ public class MaterialServiceImpl implements MaterialService {
         }
     }
 
+    @Override
+    public ResponseEntity<List<?>> getMaterialsYears() {
+        List<Integer> years = materialRepository.findDistinctYears();
+        if(!years.isEmpty()){
+            return new ResponseEntity<>(years, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
     private static Integer getRespId(Material material) {
         return material.getResponsiblePerson().getUserId();
     }

@@ -1,8 +1,6 @@
 package com.m2i.unilabmanagerbackend.controller;
 
-import com.m2i.unilabmanagerbackend.DTO.ConsumableAssignmentDTO;
 import com.m2i.unilabmanagerbackend.entity.Consumable;
-import com.m2i.unilabmanagerbackend.entity.ConsumableAssignment;
 import com.m2i.unilabmanagerbackend.service.ConsumableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,7 @@ public class ConsumableController {
     @Autowired
     private ConsumableService consumableService;
 
-    @GetMapping("/admin/consumables")
+    @GetMapping({"/admin/consumables","/responsible/consumables"})
     public ResponseEntity<List<Consumable>> getAllConsumables() {
         return consumableService.getAllConsumables();
     }
@@ -49,19 +47,24 @@ public class ConsumableController {
         return consumableService.getConsumablesByType(type);
     }
 
-    @PostMapping("/admin/consumables/assignments")
-    public ResponseEntity<ConsumableAssignment> assignConsumable(@RequestBody ConsumableAssignmentDTO assignment) {
-        return consumableService.assignConsumable(assignment);
-    }
-
-    @GetMapping("/admin/consumables/assignments")
-    public ResponseEntity<List<ConsumableAssignment>> getAssignments() {
-        return consumableService.getAssignments();
-    }
+//    @PostMapping("/admin/consumables/assignments")
+//    public ResponseEntity<ConsumableAssignment> assignConsumable(@RequestBody ConsumableAssignmentDTO assignment) {
+//        return consumableService.assignConsumable(assignment);
+//    }
+//
+//    @GetMapping("/admin/consumables/assignments")
+//    public ResponseEntity<List<ConsumableAssignment>> getAssignments() {
+//        return consumableService.getAssignments();
+//    }
 
     //get assignments by lab:
-    @GetMapping("/responsible/consumables/assignments/labId/{labId}")
-    public ResponseEntity<List<ConsumableAssignment>> getAssignmentsByLabId(@PathVariable Integer labId) {
-        return consumableService.getAssignmentsByLabId(labId);
+    @GetMapping({"/responsible/consumables/labId/{labId}","/user/consumables/labId/{labId}"})
+    public ResponseEntity<List<Consumable>> getConsumablesByLabId(@PathVariable Integer labId) {
+        return consumableService.getConsumablesByLabId(labId);
     }
+
+//    @GetMapping("/user/consumables/labId/{userId}")
+//    public ResponseEntity<List<Consumable>> getConsumablesByUserId(@PathVariable Integer userId) {
+//        return consumableService.getConsumablesByUserId(userId);
+//    }
 }

@@ -24,7 +24,7 @@ public class LabConsumablesOrderController {
         return labConsumablesOrderService.orderConsumables(labConsumablesOrderDTO);
     }
 
-    @GetMapping("/responsible/orders/consumables/laboratories/labId/{id}")
+    @GetMapping("/responsible/orders/consumables/laboratories/{id}")
     public ResponseEntity<List<LabConsumableOrder>> getConsumablesOrdersByLabId(@PathVariable Integer id) {
         return labConsumablesOrderService.getLabConsumablesOrdersByLabId(id);
     }

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +36,8 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
             MaterialOrder materialOrder = new MaterialOrder();
             materialOrder.setMaterial(material);
             materialOrder.setPerson(user);
-            materialOrder.setApprovalStatus(materialOrderDTO.getApprovalStatus());
-            materialOrder.setRequestDate(materialOrderDTO.getRequestDate());
+            materialOrder.setApprovalStatus(ApprovalStatus.PENDING);
+            materialOrder.setRequestDate(new Date());
             return new ResponseEntity<>(materialOrderRepository.save(materialOrder), HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -44,8 +45,8 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
 
 
     @Override
-    public ResponseEntity<List<MaterialOrder>> getMaterialsOrders() {
-        List<MaterialOrder> orders = materialOrderRepository.findAll();
+    public ResponseEntity<List<MaterialOrder>> getMaterialsOrders(Integer labId) {
+        List<MaterialOrder> orders = materialOrderRepository.findByLabId(labId);
         if(!orders.isEmpty()){
             return new ResponseEntity<>(orders, HttpStatus.OK);
         }
@@ -78,4 +79,6 @@ public class MaterialOrderServiceImpl implements MaterialOrderService {
 
         return new ResponseEntity<>(materialOrders.get(),HttpStatus.OK);
     }
+
+
 }

@@ -36,8 +36,5 @@ public class Laboratory {
     )
     private User deputyPerson;
 
-
-    @OneToMany(mappedBy = "laboratory")
-    @JsonIgnore
-    private List<ConsumableAssignment> consumableAssignments;
+    private String image;
 }

@@ -34,7 +34,7 @@ public class LaboratoryController {
         return laboratoryService.deleteLaboratoryById(id);
     }
 
-    @GetMapping("/admin/laboratories/id/{id}")
+    @GetMapping({"/admin/laboratories/id/{id}","/responsible/laboratories/id/{id}"})
     public ResponseEntity<?> getLaboratoryById(@PathVariable Integer id) {
         return laboratoryService.getLaboratoryById(id);
     }
@@ -44,4 +44,8 @@ public class LaboratoryController {
         return laboratoryService.getLaboratoryByName(name);
     }
 
+    @GetMapping("/admin/laboratories/responsible/{id}")
+    public ResponseEntity<?> getLaboratoryByResponsibleId(@PathVariable Integer id) {
+        return laboratoryService.getLaboratoryByResponsibleId(id);
+    }
 }

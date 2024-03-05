@@ -25,8 +25,8 @@ public class LabMaterialOrderController {
     }
 
     @GetMapping("/responsible/orders/materials/laboratories/{labId}")
-    public ResponseEntity<List<LabMaterialOrder>> getMaterialsOrdersByLaBId(@PathVariable Integer LabId) {
-        return labMaterialOrderService.getMaterialsOrdersByLaBId(LabId);
+    public ResponseEntity<List<LabMaterialOrder>> getMaterialsOrdersByLaBId(@PathVariable Integer labId) {
+        return labMaterialOrderService.getMaterialsOrdersByLaBId(labId);
     }
     //-------------------------------------admin--------------------------------------------
     @GetMapping("/admin/orders/materials/laboratories")

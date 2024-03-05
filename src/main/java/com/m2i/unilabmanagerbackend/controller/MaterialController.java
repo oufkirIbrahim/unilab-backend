@@ -15,7 +15,7 @@ public class MaterialController {
     @Autowired
     private MaterialService materialService;
 
-    @GetMapping("/admin/materials")
+    @GetMapping({"/admin/materials","/responsible/materials"})
     public ResponseEntity<List<Material>> getAllMaterials(){
         return materialService.getAllMaterials();
     }
@@ -63,7 +63,7 @@ public class MaterialController {
     }
 
     //get material by labId
-    @GetMapping("/responsible/materials/labId/{labId}")
+    @GetMapping({"/responsible/materials/laboratory/{labId}","/user/materials/laboratory/{labId}"})
     public ResponseEntity<?> getMaterialByLabId(@PathVariable Integer labId) {
         return materialService.getMaterialsByLabId(labId);
     }

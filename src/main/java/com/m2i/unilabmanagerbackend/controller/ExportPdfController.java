@@ -6,6 +6,7 @@ import com.m2i.unilabmanagerbackend.service.MaterialService;
 import jakarta.servlet.http.HttpServletResponse;
 import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class ExportPdfController {
@@ -80,4 +82,13 @@ public class ExportPdfController {
         laboratoryService.exportLabDetails(response, labId);
     }
 
+    @GetMapping("/admin/consumables/exportYears")
+    public ResponseEntity<List<?>> getConsumablesYears(){
+        return consumableService.getConsumablesYears();
+    }
+
+    @GetMapping("/admin/materials/exportYears")
+    public ResponseEntity<List<?>> getMaterialsYears(){
+        return materialService.getMaterialsYears();
+    }
 }

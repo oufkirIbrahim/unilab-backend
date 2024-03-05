@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
     List<User> findAllByLastNameContainingIgnoreCase(String firstname);
 
     List<User> findUsersByLaboratoryId(Integer labId);
+
+    Integer countUsersByLaboratoryIdAndRoleEquals(Integer labId,Role role);
 }
